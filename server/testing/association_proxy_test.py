@@ -3,10 +3,12 @@ from server.models import Customer, Item, Review
 
 
 class TestAssociationProxy:
-    '''Customer in models.py'''
+    def setup_method(self):
+        with app.app_context():
+            db.drop_all()
+            db.create_all()
 
     def test_has_association_proxy(self):
-        '''has association proxy to items'''
         with app.app_context():
             c = Customer()
             i = Item()
@@ -17,5 +19,4 @@ class TestAssociationProxy:
             db.session.add(r)
             db.session.commit()
 
-            assert hasattr(c, 'items')
-            assert i in c.items
+            assert r in c.reviews
